@@ -3,7 +3,7 @@ class Test():
         print("1 Публичная функция - метод") # public_function
 
     # создаём защищённый метод
-    def _protected_function(self):
+    def _protected_function(self): # _ - защищённый метод
         print("2 Защищённая функция - метод") # protected_function
 
     # создаём приватную функцию (за пределами класса она недоступна и работает только внутри класса)
