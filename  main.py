@@ -1,45 +1,66 @@
-# Этот class Bird() будет Базовым (родителем)  для class Pigeon()
 
-#_____Этот class Bird() будет Базовым (родителем)  для class Pigeon() _______________________________________________
+class User:
+    def __init__(self, user_id, name):
+        self.user_id = user_id
+        self.name = name
 
-class Bird(): # bird class
-    def __init__(self, name, voice, color): # bird constructor создаем переменные и инициализируем их значения
-        self.name = name # создаем характеристики
-        self.voice = voice
-        self.color = color
+    def get_id(self):
+        return self.user_id
 
-    # Задаём, что может делать птица, какие методы будут вызываться при создании объекта
-    def fly(self): # метод полета
-        print(f"{self.name} - летает")
+    def get_name(self):
+        return self.name
 
-    def eat(self): # метод еды
-        print(f"{self.name} - кушает") # выводим сообщение
-
-    def sing(self): # метод пения
-        print(f"{self.name} - поёт - чирик {self.voice}") # выводим сообщение
-
-    def info(self): # метод вывода информации
-        print(f"{self.name} - имя") # выводим сообщение
-        print(f"{self.voice} - голос") # выводим сообщение
-        print(f"{self.color} - цвет") # выводим сообщение
-
-#_____Этот class Pigeon() будет производным для Этот class Bird()  _______________________
-
-class Pigeon(Bird): # наследуемся от класса Bird
-    def __init__(self, name, voice, color, favorite_food): # вызываем из базового класса Bird, всё что есть в базовом классе Bird - характеристики
-        super().__init__(name, voice, color) # вызываем из базового класса Bird, всё что есть в базовом классе Bird - характеристики
-        self.favorite_food = favorite_food
-
-    def sing(self): # метод пения
-        print(f"{self.name} - поёт - курлык курлык")
-
-    def walk(self):
-        print(f"{self.name} - ходит") # выводим сообщение
+    def __repr__(self):
+        return f'User(id={self.get_id()}, имя={self.get_name()})'
 
 
-bird1 = Pigeon( "Гоша", "Курлы", "белый", "семена") # создание объекта
+class Admin(User):
+    def __init__(self, user_id, name):
+        super().__init__(user_id, name)
+        self.access_level = None
+        self.users = []  # Список пользователей, которыми управляет администратор
 
-bird2= Bird("Маша", "Синица", "синий") # создание объекта
+    def set_access_level(self, access_level):
+        self.access_level = access_level
 
-bird1.sing() # вызываем метод
-bird1.info() # вызываем метод
+    def get_access_level(self):
+        return self.access_level
+
+    def add_user(self, user):
+        self.users.append(user)
+        print(f'Пользователь {user.get_name()} добавлен.')
+
+    def remove_user(self, user):
+        if user in self.users: # Если пользователь есть в списке
+            self.users.remove(user)
+            print(f'Пользователь {user.get_name()} удален.')
+        else:
+            print(f'Пользователь {user.get_name()} не найден в списке.')
+
+    def __repr__(self):
+        return f'Admin(id={self.get_id()}, имя={self.get_name()}, уровень доступа={self.get_access_level()})'
+
+
+# Пример использования
+
+user = User('12345', 'Иван Петров')  # Присваиваем данные о пользователе (id, name)
+admin = Admin('888', 'Лия Строгая')  # Присваиваем данные о пользователе (id, name)
+admin2 = Admin('555', 'Павел Павлов')  # Присваиваем данные о пользователе (id, name)
+
+print(user)  # Выводим данные о user
+print(' ')
+
+print(admin)  # Выводим данные о admin
+print(' ')
+
+print('Устанавливаем уровень доступа пользователя:')
+admin.set_access_level('admin')  # Устанавливаем уровень доступа пользователя (access_level)
+print(admin)
+print(' ')
+
+admin.add_user(admin2)  # Добавляем пользователя в список
+print(admin2)
+print(' ')
+
+admin.remove_user(user)  # Пытаемся удалить пользователя из списка
+print(admin)  # Выводим данные о администрато
