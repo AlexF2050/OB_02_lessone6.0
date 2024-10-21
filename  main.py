@@ -1,66 +1,80 @@
-
 class User:
     def __init__(self, user_id, name):
-        self.user_id = user_id
-        self.name = name
+        self.__user_id = user_id  # Защищенный атрибут
+        self.__name = name         # Защищенный атрибут
+        self.__access_level = 'user'  # Уровень доступа по умолчанию
 
-    def get_id(self):
-        return self.user_id
+    # Метод для получения ID пользователя
+    def get_user_id(self):
+        return self.__user_id
 
+    # Метод для получения имени пользователя
     def get_name(self):
-        return self.name
+        return self.__name
 
-    def __repr__(self):
-        return f'User(id={self.get_id()}, имя={self.get_name()})'
+    # Метод для получения уровня доступа
+    def get_access_level(self):
+        return self.__access_level
 
 
 class Admin(User):
-    def __init__(self, user_id, name):
+    def __init__(self, user_id, name, admin_access_level):
         super().__init__(user_id, name)
-        self.access_level = None
-        self.users = []  # Список пользователей, которыми управляет администратор
+        self.__access_level = 'admin'  # Уровень доступа для администратора
+        self.__admin_access_level = admin_access_level  # Дополнительный уровень доступа
 
-    def set_access_level(self, access_level):
-        self.access_level = access_level
+    # Метод для добавления пользователя
+    def add_user(self, user_list, user):
+        #if isinstance(user, User):
+            user_list.append(user)
+            print(f"User {user.get_name()} added.")
+        #else:
+        #    print("Only User instances can be added.")
 
-    def get_access_level(self):
-        return self.access_level
-
-    def add_user(self, user):
-        self.users.append(user)
-        print(f'Пользователь {user.get_name()} добавлен.')
-
-    def remove_user(self, user):
-        if user in self.users: # Если пользователь есть в списке
-            self.users.remove(user)
-            print(f'Пользователь {user.get_name()} удален.')
+    # Метод для удаления пользователя
+    def remove_user(self, user_list, user):
+        if user in user_list:
+            user_list.remove(user)
+            print(f"\nUser {user.get_name()} removed.")
         else:
-            print(f'Пользователь {user.get_name()} не найден в списке.')
+            print("User not found in the list.")
 
-    def __repr__(self):
-        return f'Admin(id={self.get_id()}, имя={self.get_name()}, уровень доступа={self.get_access_level()})'
+    # Метод для получения уровня доступа администратора
+    def get_admin_access_level(self):
+        return self.__admin_access_level
 
 
-# Пример использования
+# Пример использования:
+user_list = []
 
-user = User('12345', 'Иван Петров')  # Присваиваем данные о пользователе (id, name)
-admin = Admin('888', 'Лия Строгая')  # Присваиваем данные о пользователе (id, name)
-admin2 = Admin('555', 'Павел Павлов')  # Присваиваем данные о пользователе (id, name)
+# Создаем обычных пользователей
+user1 = User(1, "Alice")
+user2 = User(2, "Bob")
 
-print(user)  # Выводим данные о user
-print(' ')
+# Создаем администратора
+admin = Admin(3, "Charlie", "full")
+print("Администратор заведен под id = 3")
 
-print(admin)  # Выводим данные о admin
-print(' ')
 
-print('Устанавливаем уровень доступа пользователя:')
-admin.set_access_level('admin')  # Устанавливаем уровень доступа пользователя (access_level)
-print(admin)
-print(' ')
+# Администратор добавляет пользователей
+chek_admin = int(input(f"Для изменения данных пользователей введите id администратора: "))
+print("")
 
-admin.add_user(admin2)  # Добавляем пользователя в список
-print(admin2)
-print(' ')
+if chek_admin == 3:
+    admin.add_user(user_list, user1)
+    admin.add_user(user_list, user2)
 
-admin.remove_user(user)  # Пытаемся удалить пользователя из списка
-print(admin)  # Выводим данные о администрато
+    # Выводим список пользователей
+    print("Current users:")
+    for user in user_list:
+        print(f"ID: {user.get_user_id()}, Name: {user.get_name()}, Access Level: {user.get_access_level()}")
+
+    # Администратор удаляет пользователя
+    admin.remove_user(user_list, user1)
+
+    # Выводим список пользователей после удаления
+    print("Users after removal:")
+    for user in user_list:
+        print(f"ID: {user.get_user_id()}, Name: {user.get_name()}, Access Level: {user.get_access_level()}")
+else:
+    print("Введенный id не принадлежит администратору")
